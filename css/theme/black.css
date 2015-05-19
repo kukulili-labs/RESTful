@@ -12,7 +12,8 @@ section.has-light-background, section.has-light-background h1, section.has-light
  *********************************************/
 body {
   background: #222;
-  background-color: #222; }
+  background-color: #222;
+  -webkit-font-smoothing: antialiased; }
 
 .reveal {
   font-family: 'Source Sans Pro', Helvetica, sans-serif;
@@ -134,7 +135,10 @@ body {
   box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.3); }
 
 .reveal code {
-  font-family: monospace; }
+  padding: 0 .17em;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  background-color: #3F3F3F; }
 
 .reveal pre code {
   display: block;
