@@ -41,45 +41,66 @@
 
 	<!-- Any section element inside of this container is displayed as a slide -->
 	<div class="slides">
+		<!-- RESTful API -->
 		<section>
 			<h1>RESTful API</h1>
 
-			<h3>Design & Best Practices</h3>
+			<h2>Design & Best Practices</h2>
 
 			<p>
 				<small>
 					Created by
 					<a href="https://www.kukulili-labs.com">Sebastian Müller</a> /
-					<a href="https://twitter.com/kukulili-labs">@kukulili-labs</a>
+					<a href="mailto:sebastian.mueller@red6-es.de">sebastian.mueller@red6-es.de</a> /
+					<a href="https://twitter.com/kukulili_labs">@kukulili_labs</a>
 				</small>
 			</p>
 
-			<a href="http://red6-es.de/" target="_blank">
-				<img src="images/red6_logo.svg" width="25%" alt="red6 enterprise software GmbH"
-					 style="padding: .1em; border-color: transparent; border-radius: .5em; background-color:
+			<p>
+				<a href="http://red6-es.de/" target="_blank">
+					<img src="images/red6_logo.svg" width="25%" alt="red6 enterprise software GmbH"
+						 style="padding: .1em; border-color: transparent; border-radius: .5em; background-color:
 					 rgba(255, 255, 255, 0.75)">
-			</a>
+				</a>
+			</p>
 		</section>
 
+		<!-- What is REST? -->
 		<section>
 			<section>
-				<h2>The key principle</h2>
-
-				<p>Separating your API into logical resources</p>
+				<h1>What is REST?</h1>
 			</section>
 
 			<section>
-				<h2>Vertical Slides</h2>
+				<h2 style="white-space: nowrap">
+					REST<br>==<br>
+					<b>RE</b>presentational
+					<b>S</b>tate
+					<b>T</b>ransfer
+				</h2>
+			</section>
 
-				<p>Slides can be nested inside of each other.</p>
+			<section>
+				<h2>The fundamental concept is ...</h2>
 
-				<p>Use the <em>Space</em> key to navigate through all slides.</p>
+				<h1 class="fragment" style="text-transform: uppercase;">The resource</h1>
+			</section>
+
+			<section>
+				<h2>What is a resource?</h2>
+
+				<p class="fragment">A resource is similar to an object/document instance.</p>
 			</section>
 		</section>
 
+		<!-- HTTP Methods -->
 		<section>
 			<section>
-				<h2>HTTP Methods</h2>
+				<h1>HTTP Methods</h1>
+			</section>
+
+			<section>
+				<h2>HTTP verbs</h2>
 
 				<table>
 					<thead>
@@ -110,7 +131,7 @@
 			</section>
 
 			<section>
-				<h2>HTTP Methods - Examples</h2>
+				<h2>Examples</h2>
 
 				<ul style="margin: 0;list-style: none;font-size:.9em;">
 					<li><code><b>GET</b> /resources</code> - Retrieves a list of resources</li>
@@ -123,39 +144,263 @@
 			</section>
 		</section>
 
+		<!-- Status Codes -->
 		<section>
-			<h2>But what can I make a resource?
-			</h2>
+			<section>
+				<h1>Status Codes</h1>
+			</section>
 
-			<p>
-				Not a coder? Not a problem. There's a fully-featured visual editor for authoring these, try it out at <a
-					href="http://slides.com" target="_blank">http://slides.com</a>.
-			</p>
+			<section>
+				<h2>The most popular</h2>
+
+				<ul style="margin: 0;list-style: none;font-size:.9em;">
+					<li><code><b>200</b></code> OK – [GET]</li>
+					<li><code><b>201</b></code> CREATED – [POST/PUT/PATCH]</li>
+					<li><code><b>204</b></code> NO CONTENT – [DELETE]</li>
+					<li><code><b>400</b></code> INVALID REQUEST – [POST/PUT/PATCH]</li>
+					<li><code><b>404</b></code> NOT FOUND – [*]</li>
+					<li><code><b>500</b></code> INTERNAL SERVER ERROR – [*]</li>
+				</ul>
+
+				<aside class="notes">
+					<ul>
+						<li>The Consumer requested data from the Server, and the Server found it for them (Idempotent)
+						</li>
+						<li>The Consumer gave the Server data, and the Server created a resource</li>
+						<li>The Consumer asked the Server to delete a Resource, and the Server deleted it</li>
+						<li>The Consumer gave bad data to the Server, and the Server did nothing with it (Idempotent)
+						</li>
+						<li>The Consumer referenced an inexistant Resource or Collection, and the Server did nothing
+							(Idempotent)
+						</li>
+						<li>The Server encountered an error, and the Consumer has no knowledge if the request was
+							successful
+						</li>
+					</ul>
+				</aside>
+			</section>
 		</section>
 
+		<!-- URI design -->
 		<section>
-			<h2>Pretty Code</h2>
-					<pre><code data-trim contenteditable>
-						function linkify( selector ) {
-						if( supports3DTransforms ) {
+			<section>
+				<h1>URI design</h1>
+			</section>
 
-						var nodes = document.querySelectorAll( selector );
+			<section>
+				<h2>Single resource</h2>
 
-						for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-						var node = nodes[i];
+				<pre style="font-size: .8em"><code class="http" data-trim>
+GET /persons/12345 HTTP/1.1
+Host: pdb.hanse
+Content-Type: application/json; charset=utf-8
 
-						if( !node.className ) {
-						node.className += ' roll';
-						}
-						}
-						}
-						}
+{
+  "id": "12345",
+  "firstName": "Max",
+  "lastName": "Mustermann"
+}
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>Single resource with relations</h2>
+
+				<pre style="font-size: .8em"><code class="http" data-trim>
+GET /persons/12345/addresses HTTP/1.1
+Host: pdb.hanse
+Content-Type: application/json; charset=utf-8
+
+[{
+  "id": "67890",
+  "street": "Siegfried-Wedells-Platz",
+  "number": "1",
+  "city": "Hamburg",
+  "zip": "20354"
+}]
+				</code></pre>
+			</section>
+
+			<section>
+				<h2>What about actions?</h2>
+
+				<div class="fragment">
+					<p>An example from GitHub's gist API:</p>
+
+					<ul style="margin: 0;list-style: none;font-size:.9em;">
+						<li><code><b>PUT</b> /gist/{id}/start</code> - Star a gist</li>
+						<li><code><b>DELETE</b> /gist/{id}/star</code> - Unstar a gist</li>
+					</ul>
+				</div>
+			</section>
+
+			<section>
+				<h2>What about query parameters?</h2>
+
+				<div class="fragment">
+					<p>Query parameters are for like filtiering or sorting.</p>
+
+					<ul style="margin: 0;list-style: none;font-size:.9em;">
+						<li><code><b>GET</b> /persons?state=inactive</code> - Retrieves a list of inactive persons</li>
+						<li><code><b>GET</b> /persons?sort=-priority</code> -  Retrieves a list of persons in descending order of priority</li>
+					</ul>
+				</div>
+			</section>
+
+			<section>
+				<h2>Aliases for common queries</h2>
+
+				<div class="fragment">
+					<p>For example, the recently updated persons query could be packaged up as:</p>
+
+					<ul style="margin: 0;list-style: none;font-size:.9em;">
+						<li><code><b>GET</b> /persons/recently_updated</code>
+					</ul>
+				</div>
+			</section>
+		</section>
+
+		<!-- Content-Types -->
+		<section>
+			<section>
+				<h1>Content-Types</h1>
+			</section>
+
+			<section>
+				<h2>The main formats</h2>
+
+				<ul>
+					<li>JSON Format</li>
+					<li>XML Format</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>Selecting a Representation Format</h2>
+
+				<pre style="font-size: .9em"><code class="nohighlight" data-trim>
+					curl https://example.com/resources \
+   -H "Accept: application/xml"
+				</code></pre>
+			</section>
+		</section>
+
+		<!-- Versioning -->
+		<section>
+			<section>
+				<h1>Versioning</h1>
+			</section>
+
+			<section>
+				<h2>Always version your API</h2>
+
+				<p>Use URI and header together.</p>
+			</section>
+
+			<section>
+				<div>
+					<h2>Versioning by URI</h2>
+
+					<pre style="font-size: .9em"><code class="nohighlight" data-trim>
+						curl https://example.com/v1/resources
 					</code></pre>
-			</p>
+				</div>
+
+				<div class="fragment">
+					<h2>Versioning by header</h2>
+
+					<pre style="font-size: .9em"><code class="nohighlight" data-trim>
+						curl https://example.com/resources \
+   -H "Version: v1"
+					</code></pre>
+				</div>
+			</section>
+
+			<section>
+				<h2>Combined both together</h2>
+
+				<pre style="font-size: .9em"><code class="nohighlight" data-trim>
+					curl https://example.com/v1/resources \
+   -H "Version: 2015-06-02"
+				</code></pre>
+
+				<p>The URI has a major version and the header has date based sub-versions.</p>
+			</section>
+		</section>
+
+		<!-- Authentication -->
+		<section>
+			<section>
+				<h1>Authentication</h1>
+			</section>
+
+			<section>
+				<h2>SSL everywhere - all the time</h2>
+
+				<p>Always use SSL. No exceptions.</p>
+			</section>
+
+			<section>
+				<h2>A RESTful API should be stateless</h2>
+
+				<h3 class="fragment">This means ...</h3>
+
+				<p class="fragment">
+					<b>NO</b> cookies or sessions
+				</p>
+			</section>
+
+			<section>
+				<h2>Possibilities</h2>
+
+				<ul>
+					<li>HTTP Basic Auth</li>
+					<li>OAuth 2</li>
+					<li>Special query parameter (?access_token=xxx)</li>
+				</ul>
+
+				<aside class="notes">
+					<ul>
+						<li>A randomly generated access token that is delivered in the user name field of HTTP Basic
+							Auth.</li>
+						<li>E.g. to a third party</li>
+						<li>A special query parameter access_token can be used</li>
+					</ul>
+				</aside>
+			</section>
+		</section>
+
+		<!-- Examples -->
+		<section>
+			<section>
+				<h1>Good examples</h1>
+			</section>
+
+			<section>
+				<p>
+					<a href="https://stripe.com">
+						<img src="images/stripe-logo.png" height="27" width="63"
+							 style="margin: 0;border: none;vertical-align: middle;background-color: transparent">
+					</a> -
+					<a href="https://stripe.com/docs/api">stripe.com/docs/api</a>
+				</p>
+
+				<p>
+					<a href="https://wercker.com">
+						<img src="images/wercker-logo.svg" height="27"
+							 style="margin: 0;border: none;vertical-align: middle;background-color: transparent">
+					</a> -
+					<a href="http://devcenter.wercker.com/api/">devcenter.wercker.com/api/</a>
+				</p>
+			</section>
 		</section>
 
 		<section>
-			<h1>THE END</h1>
+			<h1>Questions?</h1>
+		</section>
+
+		<section>
+			<h1 style="text-transform: uppercase;">Thank you! <b>❤</b></h1>
 		</section>
 
 	</div>
